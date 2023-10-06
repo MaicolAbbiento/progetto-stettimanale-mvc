@@ -1,0 +1,13 @@
+﻿@using progetto_stettimanale_mvc.Models
+@model List<Prenotazione>
+<h2 class="text-center"> lista prenotazioni presenti</h2>
+@foreach (Prenotazione p in Model)
+{
+    <div class="d-flex">
+        <p>prenotazione numero @p.Idprenotazione</p>
+        <p class="ms-1"> arrivati il @p.Datarrivo </p>
+        <p class="ms-1">in partenza in data @p.Datapartenza</p>
+        <p class="ms-1">clienti numero @p.Idclienti</p>
+        @Html.ActionLink("checkout", "checkout", new { id = p.Idprenotazione }, new { @class = "btn btn-success" })
+    </div>
+}

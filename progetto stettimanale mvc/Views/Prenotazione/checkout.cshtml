@@ -1,0 +1,17 @@
+﻿@using progetto_stettimanale_mvc.Models
+@model List<Servizio>
+
+<h2>checkout</h2>
+@foreach (Servizio p in Model)
+{
+    <div>
+        <p>
+            @p.descrizione
+            @p.costo.ToString("C2")
+        </p>
+    </div>
+
+}
+
+<p>tottale dei servizzi aggiuntivi @ViewBag.tots</p>
+<p>tottale del cliente @ViewBag.tottaleass</p>
