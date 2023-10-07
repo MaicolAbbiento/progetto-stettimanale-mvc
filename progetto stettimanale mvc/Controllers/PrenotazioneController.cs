@@ -1,10 +1,12 @@
-﻿using progetto_stettimanale_mvc.Models;
+﻿using Antlr.Runtime.Misc;
+using progetto_stettimanale_mvc.Models;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Mvc;
 
 namespace progetto_stettimanale_mvc.Controllers
 {
+    [Authorize]
     public class PrenotazioneController : Controller
     {
         // GET: Prenotazione
@@ -12,6 +14,7 @@ namespace progetto_stettimanale_mvc.Controllers
         public ActionResult prenota()
         {
             camera camera = new camera();
+            camera.cameralasciata();
             List<string> lista = new List<string>
             {
                 "mezza pensione",
@@ -53,7 +56,7 @@ namespace progetto_stettimanale_mvc.Controllers
                 servizziPrenotazione.Add(servizioPrenotazione);
                 tots += servizioPrenotazione.costo;
             }
-            
+
             ViewBag.tots = tots.ToString("C2");
             Prenotazione p = new Prenotazione();
             p = p.selectprenotazione(id);
@@ -61,6 +64,26 @@ namespace progetto_stettimanale_mvc.Controllers
             ViewBag.tottaleass = tot.ToString("C2");
 
             return View(servizziPrenotazione);
+        }
+
+        public ActionResult queryPage()
+        {
+            return View();
+        }
+
+        public JsonResult query1(string codicefiscale1)
+        {
+            Prenotazione p = new Prenotazione();
+            List<Prenotazione> prenotazione = p.selectprenotazioneQuery(codicefiscale1);
+            return Json(prenotazione);
+        }
+
+        public JsonResult query2()
+
+        {
+            Prenotazione p = new Prenotazione();
+            List<Prenotazione> prenotazione = p.selectprenotazioneQuery("pensione completa");
+            return Json(prenotazione, JsonRequestBehavior.AllowGet);
         }
     }
 }

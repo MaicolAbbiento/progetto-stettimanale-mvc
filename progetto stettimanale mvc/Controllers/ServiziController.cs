@@ -6,6 +6,7 @@ namespace progetto_stettimanale_mvc.Controllers
 {
     public class ServiziController : Controller
     {
+        [Authorize]
         // GET: Servizi
         [HttpGet]
         public ActionResult aggiungiservizioaospite()

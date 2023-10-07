@@ -162,6 +162,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\JavaScriptCustom.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -188,10 +189,11 @@
     <Content Include="Views\Servizi\aggiungiservizioaospite.cshtml" />
     <Content Include="Views\Prenotazione\listaprenotazioni.cshtml" />
     <Content Include="Views\Prenotazione\checkout.cshtml" />
+    <Content Include="Views\Home\login.cshtml" />
+    <Content Include="Views\Prenotazione\queryPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Home\" />
     <Folder Include="Views\Stanze\" />
   </ItemGroup>
   <ItemGroup>

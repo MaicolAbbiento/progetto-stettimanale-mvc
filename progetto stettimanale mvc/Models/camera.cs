@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Xml;
+using System.Linq;
 
 namespace progetto_stettimanale_mvc.Models
 {
@@ -65,7 +67,27 @@ namespace progetto_stettimanale_mvc.Models
                     conn.Open();
                     SqlCommand cmd = new SqlCommand();
                     cmd.Connection = conn;
-                    cmd.CommandText = "update camera set  occupata = ~occupata  where idcamera = @idcamera";
+                    cmd.CommandText = "update camera set  occupata = 0  where idcamera = @idcamera";
+                    cmd.Parameters.AddWithValue("idcamera", id);
+                    int IsOk = cmd.ExecuteNonQuery();
+                }
+                catch { }
+                finally { conn.Close(); }
+            }
+        }
+
+        public void uptadecamera2(int id)
+        {
+            if (id != 0)
+            {
+                string connetionString = ConfigurationManager.ConnectionStrings["db"].ConnectionString.ToString();
+                SqlConnection conn = new SqlConnection(connetionString);
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "update camera set  occupata = 1  where idcamera = @idcamera";
                     cmd.Parameters.AddWithValue("idcamera", id);
                     int IsOk = cmd.ExecuteNonQuery();
                 }
@@ -82,17 +104,34 @@ namespace progetto_stettimanale_mvc.Models
             {
                 sqlConnection.Open();
 
-                SqlCommand sqlCommand = new SqlCommand("Select * FROM prenotazione where datapartenza < CONVERT (date, GETDATE()) ", sqlConnection);
+                SqlCommand sqlCommand = new SqlCommand("Select * FROM prenotazione ", sqlConnection);
                 SqlDataReader sqlDataReader;
                 sqlDataReader = sqlCommand.ExecuteReader();
                 List<int> list = new List<int>();
+                List<int> camere = new List<int>();
+                List<int> camerelibere = new List<int>();
+                Prenotazione prenotazione = new Prenotazione();
                 while (sqlDataReader.Read())
+
                 {
+                    prenotazione.Datapartenza = Convert.ToDateTime(sqlDataReader["Datapartenza"]);
+                    if (prenotazione.Datapartenza > DateTime.Now)
+                    {
+                        int id2 = Convert.ToInt32(sqlDataReader["idcamera"]);
+                        list.Add(id2);
+                    }
+
                     int id = Convert.ToInt32(sqlDataReader["idcamera"]);
+                    camere.Add(id);
                 }
-                if (list.Count > 0)
+                IEnumerable<int> valoriNonComuni = list.Except(camere).Union(camere.Except(list));
+                foreach (var item in valoriNonComuni)
                 {
-                    foreach (var item in list)
+                    camerelibere.Add(item);
+                }
+                if (camerelibere.Count > 0)
+                {
+                    foreach (var item in camerelibere)
                     {
                         uptadecamera(item);
                     }

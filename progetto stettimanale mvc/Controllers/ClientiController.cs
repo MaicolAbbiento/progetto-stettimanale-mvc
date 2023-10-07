@@ -3,6 +3,7 @@ using System.Web.Mvc;
 
 namespace progetto_stettimanale_mvc.Controllers
 {
+    [Authorize]
     public class ClientiController : Controller
     {
         // GET: Clienti

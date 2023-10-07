@@ -35,6 +35,12 @@ namespace progetto_stettimanale_mvc.Models
             Idcamera = idcamera;
         }
 
+        public Prenotazione(int idprenotazione, decimal costotot)
+        {
+            Idprenotazione = idprenotazione;
+            Costotot = costotot;
+        }
+
         public decimal addprenotazione(Prenotazione p)
         {
             p.Caparra = 50;
@@ -80,6 +86,8 @@ namespace progetto_stettimanale_mvc.Models
                         cmd.Parameters.AddWithValue("Idclienti", p.Idclienti);
                         cmd.Parameters.AddWithValue("Idcamera", p.Idcamera);
                         cmd.ExecuteNonQuery();
+                        camera camera = new camera();
+                        camera.uptadecamera2(p.Idcamera);
                         return p.Costotot;
                     }
                     catch (Exception ex)
@@ -164,6 +172,47 @@ namespace progetto_stettimanale_mvc.Models
                     p.Add(prenotazione);
                 }
                 return p;
+            }
+            catch
+            {
+                return new List<Prenotazione>();
+            }
+            finally { sqlConnection.Close(); }
+        }
+
+        public List<Prenotazione> selectprenotazioneQuery(string prenotazione)
+        {
+            string conn = ConfigurationManager.ConnectionStrings["db"].ConnectionString;
+            SqlConnection sqlConnection = new SqlConnection(conn);
+            try
+            {
+                sqlConnection.Open();
+                SqlCommand sqlCommand;
+                if (prenotazione == "pensione completa")
+                {
+                    sqlCommand = new SqlCommand("Select * FROM prenotazione where dettagli=@dettagli", sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("dettagli", prenotazione);
+                }
+                else
+                {
+                    Cliente c = new Cliente();
+                    c = c.utente(prenotazione);
+
+                    sqlCommand = new SqlCommand("Select * FROM prenotazione where Idclienti=@Idclienti", sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("Idclienti", c.Idclienti);
+                }
+                SqlDataReader sqlDataReader;
+                sqlDataReader = sqlCommand.ExecuteReader();
+                List<Prenotazione> prenotazioneList = new List<Prenotazione>();
+                while (sqlDataReader.Read())
+                {
+                    Prenotazione p = new Prenotazione(
+               Convert.ToInt32(sqlDataReader["idprenotazione"]),
+                   Convert.ToDecimal(sqlDataReader["Costotot"])
+                    );
+                    prenotazioneList.Add(p);
+                }
+                return prenotazioneList;
             }
             catch
             {

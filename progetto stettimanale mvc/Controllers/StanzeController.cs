@@ -4,6 +4,7 @@ namespace progetto_stettimanale_mvc.Controllers
 {
     public class StanzeController : Controller
     {
+        [Authorize]
         // GET: Stanze
         [HttpGet]
         public ActionResult aggiungistanze()
